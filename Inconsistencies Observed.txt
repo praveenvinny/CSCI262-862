@@ -1,0 +1,27 @@
+Inconsistency 1:
+The number given at the first line of count is incorrect.
+Solution: We have to read through the file to identify the number of inputs.
+
+Inconsistency 2:
+Each set of inputs are not terminated by a new line character.
+Solution: We have to loop in through each set of objects in order to count the values.
+
+Inconsistency 3:
+One of the values is missing in the input line.
+Solution: Not addressed
+
+Inconsistency 4:
+An extra space in between the format of the registration number.
+Solution: This is addressed by removing the extra space.
+
+Inconsistency 5:
+The symbol in between each input is not a ':' but something else.
+Solution: Not addressed
+
+Inconsistency 6:
+A null value instead of an input between one ':' and the next ':'
+Solution: If the value is a ':', it needs to treated as zero while reading.
+
+Inconsistency 7:
+There is no value for count at the beginning of the file.
+Solution: We have to loop through the file and identify the count. If it's not there, we should be adding the right value.
