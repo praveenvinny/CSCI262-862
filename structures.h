@@ -60,16 +60,16 @@ class Stats
             return out;
         }
         void setType(std::string type)  { vehicleType = type; }
-        void setNumMean(int mean)       { numberMean = mean; }
-        void setNumStdDev(int nsd)      { numberStdDev = nsd; }
-        void setSpeedMean(int mean)     { speedMean = mean; }
-        void setSpeedStdDev(int speed)  { speedStdDev = speed; }
+        void setNumMean(float mean)       { numberMean = mean; }
+        void setNumStdDev(float nsd)      { numberStdDev = nsd; }
+        void setSpeedMean(float mean)     { speedMean = mean; }
+        void setSpeedStdDev(float speed)  { speedStdDev = speed; }
 
         std::string getType()       { return vehicleType; }
-        int getNumMean()    { return numberMean; }
-        int getNumStdDev()  { return numberStdDev; }
-        int getSpeedMean()  { return speedMean; }
-        int getSpeedStdDev(){ return speedStdDev; }
+        float getNumMean()    { return numberMean; }
+        float getNumStdDev()  { return numberStdDev; }
+        float getSpeedMean()  { return speedMean; }
+        float getSpeedStdDev(){ return speedStdDev; }
     private:
         std::string vehicleType;
         float numberMean;
