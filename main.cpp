@@ -75,6 +75,8 @@ int main(int argc, char *argv[]) {
             << "noOfParkingSpaces = " << statsInfo.noOfParkingSpaces << endl;
 
     cout << "numberOfVehicleType = " << noOfVehicleType << endl;
+	
+	analysisEngine();
 
     return 0;
 }
@@ -207,6 +209,51 @@ void activityEngine() {
 }
 
 void analysisEngine() {
+    vector<string> distinctVehicles;
+
+    cout << "Analysis Engine: " << endl;
+    for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
+        Vehicle obj = *iter;
+        distinctVehicles.push_back(obj.getName());
+    }
+
+    /**
+     * The following code is used to segregate the distinct vehicle types.
+     */
+    sort(distinctVehicles.begin(), distinctVehicles.end());
+    distinctVehicles.erase(unique(distinctVehicles.begin(), distinctVehicles.end()), distinctVehicles.end());
+
+    for (int vehicle = 0; vehicle < distinctVehicles.size(); vehicle++) {
+        /**To find the number of each distinct vehicles*/
+        int count = 0;
+        for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
+            Vehicle obj = *iter;
+            if (obj.getName() == distinctVehicles.at(vehicle)) {
+                count++;
+            }
+        }
+
+        string vehicleName = distinctVehicles.at(vehicle);
+
+        cout << endl << "Statistics for " << vehicleName << " will be as follows:" << endl;
+        cout << vehicleName << " Count: " << count << endl;
+        cout << "Parking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
+        for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
+            Vehicle obj = *iter;
+            if (obj.getName() == vehicleName) {
+                if (obj.getParkingFlag() == true) {
+                    cout << "True" << "\t\t";
+                } else {
+                    cout << "False" << "\t\t";
+                }
+
+                cout << obj.getRego() << "\t\t\t";
+                cout << obj.getWeight() << "\t\t";
+                cout << obj.getSpeed() << "\n";
+            }
+        }
+
+    }
 
 }
 
