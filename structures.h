@@ -39,7 +39,7 @@ class Vehicle
                 out<< "\t\t";
             else
                 out<<"\t";
-            if( v.parkingFlag == true)
+            if( v.parkingFlag == 1)
                 out<<"True"<< "\t\t";
             else
                 out<<"False"<<"\t\t";
@@ -49,7 +49,7 @@ class Vehicle
             return out;
         }
         void setName(std::string name)   { vehicleName = name; }
-        void setFlag(char flag)          { parkingFlag = flag; }
+        void setFlag(int flag)          { parkingFlag = flag; }
         void setRego(std::string rego)   { registration = rego; }
         void setVolumeWeight(int weight) { volumeWeight = weight; }
         void setSpeedWeight(int speed)   { speedWeight = speed; }
@@ -63,7 +63,7 @@ class Vehicle
         }
 
         std::string getName() { return vehicleName; }
-        char getParkingFlag() { return parkingFlag; }
+        int getParkingFlag() { return parkingFlag; }
         std::string getRego() { return registration; }
         int getVolumeWeight() { return volumeWeight; }
         int getSpeedWeight()  { return speedWeight; }
@@ -72,7 +72,7 @@ class Vehicle
         bool isVehicleParked()       { return isParked; }
     private:
         std::string vehicleName;
-        char parkingFlag;
+        int parkingFlag;
         std::string registration;
         int volumeWeight;
         int speedWeight;

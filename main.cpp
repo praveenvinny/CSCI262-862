@@ -103,7 +103,7 @@ void readVehicleData(string vehiclesFileName, std::vector<Vehicle> &vehicles, in
         }
 
         aVehicleItem.setName(string(token [0]));
-        aVehicleItem.setFlag(*token[1]);
+        aVehicleItem.setFlag(atoi(token[1]));
         aVehicleItem.setRego(string(token [2]));
         aVehicleItem.setVolumeWeight(atof(token [3]));
         aVehicleItem.setSpeedWeight(atof(token [4]));
