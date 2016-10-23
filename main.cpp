@@ -120,8 +120,8 @@ void readVehicleData(string vehiclesFileName) {
         aVehicleItem.setName(string(token [0]));
         aVehicleItem.setFlag(*token[1]);
         aVehicleItem.setRego(string(token [2]));
-        aVehicleItem.setWeight(atoi(token [3]));
-        aVehicleItem.setSpeed(atoi(token [4]));
+        aVehicleItem.setWeight(atof(token [3]));
+        aVehicleItem.setSpeed(atof(token [4]));
 
         vehicles.push_back(aVehicleItem);
         noOfVehicleItem++;
@@ -169,10 +169,10 @@ void readStatsData(string statsFileName) {
         }
 
         aStatsItem.setType(string(token [0]));
-        aStatsItem.setNumMean(atoi(token [1]));
-        aStatsItem.setNumStdDev(atoi(token [2]));
-        aStatsItem.setSpeedMean(atoi(token [3]));
-        aStatsItem.setSpeedStdDev(atoi(token [4]));
+        aStatsItem.setNumMean(atof(token [1]));
+        aStatsItem.setNumStdDev(atof(token [2]));
+        aStatsItem.setSpeedMean(atof(token [3]));
+        aStatsItem.setSpeedStdDev(atof(token [4]));
 
         stats.push_back(aStatsItem);
         noOfStatsItem++;
