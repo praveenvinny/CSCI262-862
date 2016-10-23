@@ -6,33 +6,25 @@
 #include <vector>
 #include <cstring>
 #include "structures.h"
+#include "event.h"
 
 using namespace std;
-
-const int MAXNO = 90;
-
-// global variables definition
-vector <Vehicle> vehicles;
-vector <Stats> stats;
-
-StatsInfo statsInfo;
-int noOfVehicleType;
-int days;
+#define MAXNO 90
 
 // functions definition
-void readVehicleData(string);
-void readStatsData(string);
+void readVehicleData(string vehiclesFileName, vector<Vehicle> &vehicles, int &noOfVehicleType);
+void readStatsData(string statsFileName, vector<Stats> &stats, StatsInfo &statsInfo);
 
-void printVehicleInfo();
-void printStatsInfo();
-
-
+void printVehicleInfo(vector<Vehicle> vehicles);
+void printStatsInfo(vector<Stats> stats);
 
 void activityEngine();
 void analysisEngine();
 void alertEngine();
 
+
 int main(int argc, char *argv[]) {
+
     /*
         if(argc != 4)
         {
@@ -51,6 +43,14 @@ int main(int argc, char *argv[]) {
         cout<<"argv[3] = "<<argv[3]<<endl;
      */
 
+
+    vector<Vehicle> vehicles;
+    vector<Stats> stats;
+
+    StatsInfo statsInfo;
+    int noOfVehicleType;
+    int days;
+
     string vehiclesFileName = "Vehicles.txt";
     string statsFileName = "Stats.txt";
     days = 3;
@@ -61,12 +61,12 @@ int main(int argc, char *argv[]) {
     cout << "days = " << days << endl << endl;
 
     // read in all data from text file
-    readVehicleData(vehiclesFileName);
-    readStatsData(statsFileName);
+    readVehicleData(vehiclesFileName, vehicles, noOfVehicleType);
+    readStatsData(statsFileName, stats, statsInfo);
 
     // print info
-    printVehicleInfo();
-    printStatsInfo();
+    printVehicleInfo(vehicles);
+    printStatsInfo(stats);
 
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 //------------------------
 // read in data from Vehicles.txt file
 
-void readVehicleData(string vehiclesFileName) {
+void readVehicleData(string vehiclesFileName, std::vector<Vehicle> &vehicles, int &noOfVehicleType) {
     fstream afile;
     //string vehiclesFileName = "Vehicles.txt";
 
@@ -134,7 +134,7 @@ void readVehicleData(string vehiclesFileName) {
 //------------------------
 // read in data from Stats.txt file
 
-void readStatsData(string statsFileName) {
+void readStatsData(string statsFileName, std::vector<Stats> &stats, StatsInfo &statsInfo) {
     fstream afile;
     //string statsFileName = "Stats.txt";
 
@@ -153,7 +153,6 @@ void readStatsData(string statsFileName) {
     int noOfStatsItem = 0;
     Stats aStatsItem;
     string line;
-
     while (!afile.eof()) {
         getline(afile, line);
         char tmp[MAXNO];
@@ -182,7 +181,7 @@ void readStatsData(string statsFileName) {
     cout << "Data has been read from file Stats.txt" << endl << endl;
 }
 
-void printStatsInfo() {
+void printStatsInfo(vector<Stats> stats) {
     cout << endl << "- - - - - - - printStatsInfo - - - - - - -" << endl << endl;
 
     cout<<"Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD"<<endl;
@@ -192,7 +191,7 @@ void printStatsInfo() {
     }
 }
 
-void printVehicleInfo() {
+void printVehicleInfo(vector<Vehicle> vehicles) {
     cout << endl << "- - - - - - - printVehicleInfo - - - - - - -" << endl << endl;
 
     cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
@@ -200,10 +199,6 @@ void printVehicleInfo() {
     for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
         cout <<  *iter;
     }
-}
-
-void activityEngine() {
-
 }
 
 void analysisEngine() {
