@@ -1,7 +1,7 @@
 #ifndef EVENT_H
 #define EVENT_H
 #include <vector>
-
+#define DEBUG
 class ActivityEngine
 {
     public:

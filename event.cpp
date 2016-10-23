@@ -41,7 +41,7 @@ int findOffset(std::vector<Stats> stats, std::string vehicleType)
 void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::vector<Vehicle> vehicles, int time)
 {
     // this method has a chance of generating vehicle in accordance with the statistics in stats vector
-    int probability = rand() % 1440; // get a number between 1 and 1399 for each minute in the day
+    int probability = rand() % 1000; // get a number between 1 and 1399 for each minute in the day
     if(probability <= stats[offset].getNumMean())
     {
         Vehicle vehicle;
@@ -52,7 +52,18 @@ void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::
         vehicle.setSpeedWeight(vehicles[offset].getSpeedWeight());
         vehicle.setSpeed(varySpeed(stats[offset].getSpeedMean(), stats[offset].getSpeedStdDev()));
         vehicle.setBeginningTime(time);
+        vehicle.generateRego();
         this->vehicles.push_back(vehicle);
+        #ifdef DEBUG
         std::cout << vehicle;
+        #endif
     }
+}
+
+void ActivityEngine::handleDepartures(int time)
+{
+     for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
+     {
+        // Check to see if they pull out on a side road
+     }
 }
