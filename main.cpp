@@ -5,33 +5,11 @@
 #include <string>
 #include <vector>
 #include <cstring>
+#include "structures.h"
 
 using namespace std;
 
 const int MAXNO = 90;
-
-struct Vehicle {
-    string vehicleName;
-    int parkingFlag;
-    string registrationFormat;
-    int volumeWeight;
-    int speedWeight;
-};
-
-struct Stats {
-    string vehicleType;
-    int numberMean;
-    int numberStandardDeviation;
-    int speedMean;
-    int speedStandardDeviation;
-};
-
-struct StatsInfo {
-    int noOfVehicleType;
-    int lengthOfRoad;
-    int speedLimit;
-    int noOfParkingSpaces;
-};
 
 // global variables definition
 vector <Vehicle> vehicles;
@@ -89,7 +67,7 @@ int main(int argc, char *argv[]) {
     // print info
     printVehicleInfo();
     printStatsInfo();
-    
+
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
             << "lengthOfRoad = " << statsInfo.lengthOfRoad << endl
@@ -139,11 +117,11 @@ void readVehicleData(string vehiclesFileName) {
             ++i;
         }
 
-        aVehicleItem.vehicleName = string(token [0]);
-        aVehicleItem.parkingFlag = atoi(token [1]);
-        aVehicleItem.registrationFormat = string(token [2]);
-        aVehicleItem.volumeWeight = atoi(token [3]);
-        aVehicleItem.speedWeight = atoi(token [4]);
+        aVehicleItem.setName(string(token [0]));
+        aVehicleItem.setFlag(*token[1]);
+        aVehicleItem.setRego(string(token [2]));
+        aVehicleItem.setWeight(atoi(token [3]));
+        aVehicleItem.setSpeed(atoi(token [4]));
 
         vehicles.push_back(aVehicleItem);
         noOfVehicleItem++;
@@ -190,11 +168,11 @@ void readStatsData(string statsFileName) {
             ++i;
         }
 
-        aStatsItem.vehicleType = string(token [0]);
-        aStatsItem.numberMean = atoi(token [1]);
-        aStatsItem.numberStandardDeviation = atoi(token [2]);
-        aStatsItem.speedMean = atoi(token [3]);
-        aStatsItem.speedStandardDeviation = atoi(token [4]);
+        aStatsItem.setType(string(token [0]));
+        aStatsItem.setNumMean(atoi(token [1]));
+        aStatsItem.setNumStdDev(atoi(token [2]));
+        aStatsItem.setSpeedMean(atoi(token [3]));
+        aStatsItem.setSpeedStdDev(atoi(token [4]));
 
         stats.push_back(aStatsItem);
         noOfStatsItem++;
@@ -205,45 +183,22 @@ void readStatsData(string statsFileName) {
 }
 
 void printStatsInfo() {
-    Stats aStatsItem;
     cout << endl << "- - - - - - - printStatsInfo - - - - - - -" << endl << endl;
-    
+
     cout<<"Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD"<<endl;
 
     for (vector<Stats>::iterator iter = stats.begin(); iter != stats.end(); ++iter) {
-        aStatsItem = (*iter);
-        cout << aStatsItem.vehicleType;
-        if(aStatsItem.vehicleType.size()<8)
-            cout<< "\t\t";
-        else
-            cout<<"\t";
-        cout << aStatsItem.numberMean << "\t\t";
-        cout << aStatsItem.numberStandardDeviation << "\t\t\t";
-        cout << aStatsItem.speedMean << "\t\t";
-        cout << aStatsItem.speedStandardDeviation << endl;
+        cout << *iter;
     }
 }
 
 void printVehicleInfo() {
-    Vehicle aVehicleItem;
     cout << endl << "- - - - - - - printVehicleInfo - - - - - - -" << endl << endl;
-    
+
     cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
 
     for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
-        aVehicleItem = (*iter);
-        cout <<  aVehicleItem.vehicleName;
-        if(aVehicleItem.vehicleName.size()<8)
-            cout<< "\t\t";
-        else
-            cout<<"\t";
-        if( aVehicleItem.parkingFlag == true)
-            cout<<"True"<< "\t\t";
-        else
-            cout<<"False"<<"\t\t";
-        cout <<  aVehicleItem.registrationFormat << "\t\t";
-        cout <<  aVehicleItem.volumeWeight << "\t\t";
-        cout <<  aVehicleItem.speedWeight << "\n";
+        cout <<  *iter;
     }
 }
 
