@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <fstream>
 #include "structures.h"
 #include "event.h"
 
@@ -13,9 +14,9 @@ void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle>
     for(int minute = 0; minute < DAY_LENGTH_IN_MINUTES; minute++)
     {
         generateVehicle(rand()%si.noOfVehicleType, stats, vehicles, minute);
-
     }
 
+    writeLogFile();
 }
 
 static int varySpeed(int mean, int stdDev)
@@ -66,4 +67,26 @@ void ActivityEngine::handleDepartures(int time)
      {
         // Check to see if they pull out on a side road
      }
+}
+
+void ActivityEngine::writeLogFile(std::string outputFileName)
+{
+    std::ofstream ofile (outputFileName);
+
+    if (!ofile.is_open())
+    {
+        std::cout << "Cannot write to file " << outputFileName << ", Please check" <<std::endl;
+        exit(-1);
+    }
+
+    ofile << std::endl << "- - - - - - - Activity Log - - - - - - -" << std::endl << std::endl;
+
+    for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
+    {
+        ofile << (*iter) << std::endl;
+    }
+
+    ofile.close();
+
+    std::cout << "All data has been writen to " << outputFileName << "." <<std::endl;
 }
