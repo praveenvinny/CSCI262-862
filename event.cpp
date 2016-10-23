@@ -71,7 +71,7 @@ void ActivityEngine::handleDepartures(int time)
 
 void ActivityEngine::writeLogFile(std::string outputFileName)
 {
-    std::ofstream ofile (outputFileName);
+    std::ofstream ofile (outputFileName.c_str());
 
     if (!ofile.is_open())
     {
