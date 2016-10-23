@@ -4,10 +4,10 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <ctime>
 #include <cstring>
 #include "structures.h"
 #include "event.h"
-
 using namespace std;
 #define MAXNO 90
 
@@ -18,43 +18,26 @@ void readStatsData(string statsFileName, vector<Stats> &stats, StatsInfo &statsI
 void printVehicleInfo(vector<Vehicle> vehicles);
 void printStatsInfo(vector<Stats> stats);
 
-void activityEngine();
-void analysisEngine();
-void alertEngine();
-
-
 int main(int argc, char *argv[]) {
-
-    /*
-        if(argc != 4)
-        {
-            cout << "Please check the arguments, the program will end" << endl;
+    if(argc != 4)
+    {
+        cerr << "Usage: "<< argv[0] << " Vehicles.txt Stats.txt NumOfDays" << endl;
             exit(-1);
-        }
+    }
 
-        string vehiclesFileName = string(argv[1]);
-        string statsFileName = string(argv[2]);
-        days = atoi(argv[3]);
-
-        cout<<"argc = "<<argc<<endl;
-        cout<<"argv[0] = "<<argv[0]<<endl;
-        cout<<"argv[1] = "<<argv[1]<<endl;
-        cout<<"argv[2] = "<<argv[2]<<endl;
-        cout<<"argv[3] = "<<argv[3]<<endl;
-     */
-
+    srand(time(NULL));
 
     vector<Vehicle> vehicles;
     vector<Stats> stats;
+    ActivityEngine activityEngine;
 
     StatsInfo statsInfo;
     int noOfVehicleType;
     int days;
 
-    string vehiclesFileName = "Vehicles.txt";
-    string statsFileName = "Stats.txt";
-    days = 3;
-
+    string vehiclesFileName = string(argv[1]);
+    string statsFileName = string(argv[2]);
+    days = atoi(argv[3]);
 
     cout << "vehiclesFileName = " << vehiclesFileName << endl;
     cout << "statsFileName = " << statsFileName << endl;
@@ -68,6 +51,8 @@ int main(int argc, char *argv[]) {
     printVehicleInfo(vehicles);
     printStatsInfo(stats);
 
+    for(int i = 0; i < days; i++)
+        activityEngine.simulateDay(stats, vehicles, statsInfo);
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
             << "lengthOfRoad = " << statsInfo.lengthOfRoad << endl
@@ -120,8 +105,8 @@ void readVehicleData(string vehiclesFileName, std::vector<Vehicle> &vehicles, in
         aVehicleItem.setName(string(token [0]));
         aVehicleItem.setFlag(*token[1]);
         aVehicleItem.setRego(string(token [2]));
-        aVehicleItem.setWeight(atof(token [3]));
-        aVehicleItem.setSpeed(atof(token [4]));
+        aVehicleItem.setVolumeWeight(atof(token [3]));
+        aVehicleItem.setSpeedWeight(atof(token [4]));
 
         vehicles.push_back(aVehicleItem);
         noOfVehicleItem++;
@@ -186,7 +171,7 @@ void printStatsInfo(vector<Stats> stats) {
 
     cout<<"Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD"<<endl;
 
-    for (vector<Stats>::iterator iter = stats.begin(); iter != stats.end(); ++iter) {
+    for (vector<Stats>::iterator iter = stats.begin(); iter < stats.end(); ++iter) {
         cout << *iter;
     }
 }
@@ -196,7 +181,7 @@ void printVehicleInfo(vector<Vehicle> vehicles) {
 
     cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
 
-    for (vector<Vehicle>::iterator iter = vehicles.begin(); iter != vehicles.end(); ++iter) {
+    for (vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
         cout <<  *iter;
     }
 }

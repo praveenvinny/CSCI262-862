@@ -2,11 +2,12 @@
 #define STRUCUTRES_H
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Vehicle
 {
     public:
-        Vehicle() : vehicleName(""), parkingFlag(0), registrationFormat(""), volumeWeight(0), speed(0) {}
+        Vehicle() : vehicleName(""), parkingFlag(0), registrationFormat(""), volumeWeight(0), speedWeight(0) {}
         friend std::ostream &operator <<(std::ostream &out, Vehicle v)
         {
             out << v.vehicleName;
@@ -20,26 +21,32 @@ class Vehicle
                 out<<"False"<<"\t\t";
             out << v.registrationFormat << "\t\t";
             out << v.volumeWeight << "\t\t";
-            out << v.speed << "\n";
+            out << v.speedWeight << "\n";
             return out;
         }
-        void setName(std::string name)  { vehicleName = name; }
+        void setName(std::string name)   { vehicleName = name; }
         void setFlag(char flag)          { parkingFlag = flag; }
-        void setRego(std::string rego)  { registrationFormat = rego; }
-        void setWeight(int weight)      { volumeWeight = weight; }
-        void setSpeed(int speed)        { this->speed = speed; }
+        void setRego(std::string rego)   { registrationFormat = rego; }
+        void setVolumeWeight(int weight) { volumeWeight = weight; }
+        void setSpeedWeight(int speed)   { speedWeight = speed; }
+        void setSpeed(int speed)         { this->speed = speed; }
+        void setBeginningTime(int time)  { beginningTime = time; }
 
-        std::string getName()       { return vehicleName; }
-        char getParkingFlag(){ return parkingFlag; }
-        std::string getRego()       { return registrationFormat; }
-        int getWeight()     { return volumeWeight; }
-        int getSpeed()      { return speed; }
+        std::string getName() { return vehicleName; }
+        char getParkingFlag() { return parkingFlag; }
+        std::string getRego() { return registrationFormat; }
+        int getVolumeWeight() { return volumeWeight; }
+        int getSpeedWeight()  { return speedWeight; }
+        int getSpeed()        { return speed; }
+        int getBegTime()      { return beginningTime; }
     private:
         std::string vehicleName;
         char parkingFlag;
         std::string registrationFormat;
         int volumeWeight;
+        int speedWeight;
         int speed;
+        int beginningTime;
 };
 
 class Stats
@@ -77,6 +84,10 @@ class Stats
         int speedMean;
         int speedStdDev;
 };
+
+/*
+
+*/
 
 struct StatsInfo
 {
