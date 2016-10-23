@@ -28,6 +28,12 @@ class Vehicle
         void setRego(std::string rego)  { registrationFormat = rego; }
         void setWeight(int weight)      { volumeWeight = weight; }
         void setSpeed(int speed)        { this->speed = speed; }
+
+        std::string getName()       { return vehicleName; }
+        char getParkingFlag(){ return parkingFlag; }
+        std::string getRego()       { return registrationFormat; }
+        int getWeight()     { return volumeWeight; }
+        int getSpeed()      { return speed; }
     private:
         std::string vehicleName;
         char parkingFlag;
@@ -58,6 +64,12 @@ class Stats
         void setNumStdDev(int nsd)      { numberStdDev = nsd; }
         void setSpeedMean(int mean)     { speedMean = mean; }
         void setSpeedStdDev(int speed)  { speedStdDev = speed; }
+
+        std::string getType()       { return vehicleType; }
+        int getNumMean()    { return numberMean; }
+        int getNumStdDev()  { return numberStdDev; }
+        int getSpeedMean()  { return speedMean; }
+        int getSpeedStdDev(){ return speedStdDev; }
     private:
         std::string vehicleType;
         int numberMean;
