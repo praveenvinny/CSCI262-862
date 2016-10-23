@@ -51,10 +51,10 @@ class Vehicle
         void setName(std::string name)   { vehicleName = name; }
         void setFlag(int flag)          { parkingFlag = flag; }
         void setRego(std::string rego)   { registration = rego; }
-        void setVolumeWeight(int weight) { volumeWeight = weight; }
-        void setSpeedWeight(int speed)   { speedWeight = speed; }
-        void setSpeed(int speed)         { this->speed = speed; }
-        void setBeginningTime(int time)  { beginningTime = time; }
+        void setVolumeWeight(float weight) { volumeWeight = weight; }
+        void setSpeedWeight(float speed)   { speedWeight = speed; }
+        void setSpeed(float speed)         { this->speed = speed; }
+        void setBeginningTime(float time)  { beginningTime = time; }
         void setParked(bool val)         { isParked = val; }
         void generateRego()
         {
@@ -65,19 +65,19 @@ class Vehicle
         std::string getName() { return vehicleName; }
         int getParkingFlag() { return parkingFlag; }
         std::string getRego() { return registration; }
-        int getVolumeWeight() { return volumeWeight; }
-        int getSpeedWeight()  { return speedWeight; }
-        int getSpeed()        { return speed; }
-        int getBegTime()      { return beginningTime; }
+        float getVolumeWeight() { return volumeWeight; }
+        float getSpeedWeight()  { return speedWeight; }
+        float getSpeed()        { return speed; }
+        float getBegTime()      { return beginningTime; }
         bool isVehicleParked()       { return isParked; }
     private:
         std::string vehicleName;
         int parkingFlag;
         std::string registration;
-        int volumeWeight;
-        int speedWeight;
-        int speed;
-        int beginningTime;
+        float volumeWeight;
+        float speedWeight;
+        float speed;
+        float beginningTime;
         bool isParked;
 };
 
