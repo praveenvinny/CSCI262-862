@@ -38,8 +38,8 @@ class Vehicle
         std::string vehicleName;
         char parkingFlag;
         std::string registrationFormat;
-        int volumeWeight;
-        int speed;
+        float volumeWeight;
+        float speed;
 };
 
 class Stats
@@ -72,10 +72,10 @@ class Stats
         int getSpeedStdDev(){ return speedStdDev; }
     private:
         std::string vehicleType;
-        int numberMean;
-        int numberStdDev;
-        int speedMean;
-        int speedStdDev;
+        float numberMean;
+        float numberStdDev;
+        float speedMean;
+        float speedStdDev;
 };
 
 struct StatsInfo
