@@ -2,6 +2,7 @@
 #define EVENT_H
 #include <iostream>
 #include <vector>
+#include <map>
 #include <string>
 //#define DEBUG
 class ActivityEngine
@@ -16,6 +17,7 @@ class ActivityEngine
                 exit(-1);
             }
             ofile << "Opening log..." << std::endl;
+
         }
         ~ActivityEngine()
         {
@@ -33,6 +35,7 @@ class ActivityEngine
         void handleMovement();
     private:
         std::vector<Vehicle> vehicles;
+        std::map<std::string, int> carList;
         int dayCount;
         std::ofstream ofile;
 };

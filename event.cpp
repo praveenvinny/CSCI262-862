@@ -42,9 +42,23 @@ static int findOffset(std::vector<Vehicle> vehicles, std::string rego)
 
 void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::vector<Vehicle> vehicles, int time)
 {
+    int probability = 0;
     // this method has a chance of generating vehicle in accordance with the statistics in stats vector
-    int probability = rand() % 1401; // get a number between 1 and 1399 for each minute in the day
-    if(probability <= stats[offset].getNumMean())
+    if(carList[vehicles[offset].getName()] <= stats[offset].getNumMean())
+    {
+        if(carList[vehicles[offset].getName()] - stats[offset].getNumMean() >= 20)
+            probability = 20;
+        else if(carList[vehicles[offset].getName()] - stats[offset].getNumMean() >= 10)
+            probability = 25;
+        else if(carList[vehicles[offset].getName()] - stats[offset].getNumMean() >= 5)
+            probability = 30;
+        else if(carList[vehicles[offset].getName()] - stats[offset].getNumMean() >= 0)
+            probability = 35;
+        else
+            probability = 45;
+    }
+    int rval = rand() % probability;
+    if(rval <= 2)
     {
         Vehicle vehicle;
         vehicle.setName(vehicles[offset].getName());
@@ -152,7 +166,7 @@ void ActivityEngine::handleParking()
             logMessage(vehicles[offset].getRego());
             logMessage(" is no longer parked. ");
             vehicles[offset].setParked(false);
-            logMessage("They were parked for ");
+            logMessage("They have been parked for ");
             logMessage(vehicles[offset].getParkedTime());
             logMessage(" minutes total.\n");
             parkedVehicles.erase(it);
