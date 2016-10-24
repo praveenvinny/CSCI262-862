@@ -11,6 +11,11 @@
 #include "event.h"
 #define DAY_LENGTH_IN_MINUTES 1440
 
+vector<Vehicle> ActivityEngine::getVectorList() {
+    return this->vehicles;
+}
+
+
 void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si)
 {
     ofile << "\nBeginning simulation of day " << dayCount + 1 << "..." << std::endl;

@@ -5,10 +5,10 @@
  * Created on 24 October 2016, 2:11 PM
  */
 
-#include <vector>
-
 #ifndef ANALYSISENGINE_H
 #define ANALYSISENGINE_H
+
+#include <vector>
 
 using namespace std;
 

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <string>
@@ -8,6 +7,7 @@
 #include <cstring>
 #include "structures.h"
 #include "event.h"
+#include "analysisEngine.h"
 using namespace std;
 #define MAXNO 90
 
@@ -51,12 +51,18 @@ int main(int argc, char *argv[]) {
     printVehicleInfo(vehicles);
     printStatsInfo(stats);
     ActivityEngine activityEngine(statsInfo.noOfVehicleType);
+    
+    /**
+     * The analysis engine is being invoked here.
+     */
     AnalysisEngine *ae = new AnalysisEngine[days];
     activityEngine.setUpCarList(stats, vehicles);
     for(int i = 0; i < days; i++)
     {
         activityEngine.simulateDay(stats, vehicles, statsInfo);
         activityEngine.computeFinalStats(ae, days);
+        vector<Vehicle> vehiclesList = activityEngine.getVectorList();
+        cout<<"Number of vehicles = "<<vehiclesList.size();
     }
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
@@ -78,7 +84,7 @@ void readVehicleData(string vehiclesFileName, std::vector<Vehicle> &vehicles, in
 
     afile.open(vehiclesFileName.c_str());
     if (!afile) {
-        cout << "Cannot open" << vehiclesFileName << ", please cheke the file" << endl;
+        cout << "Cannot open" << vehiclesFileName << ", please check the file" << endl;
         exit(-1);
     }
 
