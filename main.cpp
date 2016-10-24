@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
     vector<Vehicle> vehicles;
     vector<Stats> stats;
-    ActivityEngine activityEngine;
+
 
     StatsInfo statsInfo;
     int noOfVehicleType;
@@ -50,9 +50,14 @@ int main(int argc, char *argv[]) {
     // print info
     printVehicleInfo(vehicles);
     printStatsInfo(stats);
+    ActivityEngine activityEngine(statsInfo.noOfVehicleType);
+    AnalysisEngine *ae = new AnalysisEngine[days];
     activityEngine.setUpCarList(stats, vehicles);
     for(int i = 0; i < days; i++)
+    {
         activityEngine.simulateDay(stats, vehicles, statsInfo);
+        activityEngine.computeFinalStats(ae, days);
+    }
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
             << "lengthOfRoad = " << statsInfo.lengthOfRoad << endl
