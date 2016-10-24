@@ -5,9 +5,12 @@
 #include <vector>
 #include <ctime>
 #include <cstring>
+#include <sstream>
+
 #include "structures.h"
 #include "event.h"
 #include "analysisEngine.h"
+
 using namespace std;
 #define MAXNO 90
 
@@ -18,11 +21,49 @@ void readStatsData(string statsFileName, vector<Stats> &stats, StatsInfo &statsI
 void printVehicleInfo(vector<Vehicle> vehicles);
 void printStatsInfo(vector<Stats> stats);
 
+/**
+ * This is used to generate the daily statistics.
+ * @param vehicles
+ * @param day
+ */
+void alertEngine(vector<Vehicle> vehicles, int day) {
+    //vector<float> array;
+    double meanValue = 0.0;
+    for (int i = 0; i < vehicles.size(); i++) {
+        //array.push_back(vehicles.at(i).getSpeed());
+        meanValue += vehicles.at(i).getSpeed();
+    }
+
+    meanValue = meanValue / vehicles.size();
+    cout << "\nMean for day " << day << ": " << meanValue;
+
+    std::string outputFileName = "Stats_";
+    std::stringstream fileDay;
+    fileDay << day << ".txt";
+    outputFileName = outputFileName + fileDay.str();
+    cout << "\nWriting statistics to: " << outputFileName << endl;
+    ofstream toFile(outputFileName.c_str());
+    int vehicleSize = vehicles.size();
+    toFile <<  vehicleSize << endl;
+    for (int i = 0; i < vehicles.size(); i++) {
+        string vehicleName = vehicles.at(i).getName();
+        toFile << vehicleName << ":";
+        double mean = ((vehicles.at(i).getSpeed()) /
+                (vehicles.at(i).getBegTime() + vehicles.at(i).getParkedTime()));
+        toFile << mean << ":";
+        double standardDev = (meanValue + vehicles.at(i).getSpeedWeight());
+        toFile << standardDev << ":";
+        toFile << vehicles.at(i).getSpeedWeight() << ":";
+        double sd = ((meanValue - vehicles.at(i).getSpeed())*(meanValue -
+                vehicles.at(i).getSpeed()) / 2);
+        toFile<<sd<<":\n";
+    }
+}
+
 int main(int argc, char *argv[]) {
-    if(argc != 4)
-    {
-        cerr << "Usage: "<< argv[0] << " Vehicles.txt Stats.txt NumOfDays" << endl;
-            exit(-1);
+    if (argc != 4) {
+        cerr << "Usage: " << argv[0] << " Vehicles.txt Stats.txt NumOfDays" << endl;
+        exit(-1);
     }
 
     srand(time(NULL));
@@ -51,18 +92,19 @@ int main(int argc, char *argv[]) {
     printVehicleInfo(vehicles);
     printStatsInfo(stats);
     ActivityEngine activityEngine(statsInfo.noOfVehicleType);
-    
+
     /**
      * The analysis engine is being invoked here.
      */
     AnalysisEngine *ae = new AnalysisEngine[days];
     activityEngine.setUpCarList(stats, vehicles);
-    for(int i = 0; i < days; i++)
-    {
+    for (int i = 0; i < days; i++) {
         activityEngine.simulateDay(stats, vehicles, statsInfo);
         activityEngine.computeFinalStats(ae, days);
         vector<Vehicle> vehiclesList = activityEngine.getVectorList();
-        cout<<"Number of vehicles = "<<vehiclesList.size();
+
+        alertEngine(vehiclesList, (i + 1));
+        activityEngine.eraseList();
     }
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
@@ -180,7 +222,7 @@ void readStatsData(string statsFileName, std::vector<Stats> &stats, StatsInfo &s
 void printStatsInfo(vector<Stats> stats) {
     cout << endl << "- - - - - - - printStatsInfo - - - - - - -" << endl << endl;
 
-    cout<<"Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD"<<endl;
+    cout << "Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD" << endl;
 
     for (vector<Stats>::iterator iter = stats.begin(); iter < stats.end(); ++iter) {
         cout << *iter;
@@ -190,9 +232,11 @@ void printStatsInfo(vector<Stats> stats) {
 void printVehicleInfo(vector<Vehicle> vehicles) {
     cout << endl << "- - - - - - - printVehicleInfo - - - - - - -" << endl << endl;
 
-    cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed\n";
+    cout << "Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed\n";
 
     for (vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
-        cout <<  *iter << std::endl;;
+        cout << *iter << std::endl;
+        ;
     }
 }
+

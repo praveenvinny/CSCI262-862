@@ -11,7 +11,7 @@
 #include "event.h"
 #define DAY_LENGTH_IN_MINUTES 1440
 
-vector<Vehicle> ActivityEngine::getVectorList() {
+vector<Vehicle>  ActivityEngine::getVectorList() {
     return this->vehicles;
 }
 
@@ -29,7 +29,7 @@ void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle>
         handleDepartures(minute, si);
         handleParking(si);
     }
-    this->vehicles.clear();
+    //this->vehicles.clear();
 }
 
 static int varySpeed(int mean, int stdDev)
@@ -130,7 +130,7 @@ void ActivityEngine::handleDepartures(int minute, StatsInfo si)
             logMessage(minute-vehicles[randOffset].getBegTime());
             logMessage(" minutes on the road.\n\n");
 
-            vehicles.erase(vehicles.begin()+randOffset);
+            //vehicles.erase(vehicles.begin()+randOffset);
         }
     }
     for(std::vector<Vehicle>::iterator it = vehicles.begin(); it < vehicles.end(); ++it)
@@ -146,7 +146,7 @@ void ActivityEngine::handleDepartures(int minute, StatsInfo si)
             logMessage(" after ");
             logMessage(ttime+it->getParkedTime());
             logMessage(" minutes on the road.\n\n");
-            vehicles.erase(it);
+            //vehicles.erase(it);
         }
     }
 }
@@ -210,3 +210,8 @@ void ActivityEngine::setUpCarList(std::vector<Stats> &stats, std::vector<Vehicle
         carList[vehicles[i].getName()] = stats[i].getNumMean();
     }
 }
+
+void ActivityEngine::eraseList() {
+    this->vehicles.clear();
+}
+

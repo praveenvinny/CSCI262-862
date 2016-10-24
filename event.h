@@ -39,6 +39,7 @@ class ActivityEngine
         void setUpCarList(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles);
         void computeFinalStats(AnalysisEngine *ae, int aeSize);
         vector<Vehicle> getVectorList();
+        void eraseList();
     protected:
         void generateVehicle(int offset, std::vector<Stats> stats, std::vector<Vehicle> vehicles, int time);
         void handleParking(StatsInfo statsInfo);
