@@ -3,7 +3,6 @@
 #include <fstream>
 #include "structures.h"
 #include "event.h"
-#define DEBUG
 #define DAY_LENGTH_IN_MINUTES 1440
 
 void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si)
@@ -25,7 +24,7 @@ void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle>
 static int varySpeed(int mean, int stdDev)
 {
     int val = rand()% 2 + 1;
-    int retval = rand() % (mean+val*stdDev);
+    int retval = rand() % 10 + (mean+val*stdDev);
     return retval;
 }
 
@@ -58,8 +57,8 @@ void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::
         vehicle.generateRego();
         this->vehicles.push_back(vehicle);
         logMessage("Vehicle arrived on road:\n");
-        logMessage("Name\tParking Flag\tRego\t\tVw\t\tSw\t\tSpeed\n");
-        logMessage(vehicle);
+        //logMessage("Name\tParking Flag\tRego\t\tVw\t\tSw\t\tSpeed\n");
+        ofile << vehicle.getName() << " " << vehicle.getRego() << " Speed: "<< vehicle.getSpeed();
         logMessage("\n");
         logMessage(vehicle.getRego());
         logMessage(" arrived at time: ");
@@ -86,7 +85,7 @@ void ActivityEngine::handleDepartures(int minute, StatsInfo si)
         if(rand()%120 < 5 && !vehicles[i].isVehicleParked())
         {
             logMessage(vehicles[randOffset].getName());
-            logMessage(" with registration: ");
+            logMessage(" with registration ");
             logMessage(vehicles[randOffset].getRego());
             logMessage(" has departed off side road at time: ");
             logMessage(minute);
@@ -103,12 +102,12 @@ void ActivityEngine::handleDepartures(int minute, StatsInfo si)
         if(minute >= (ttime + it->getBegTime() + it->getParkedTime()) && !it->isVehicleParked())
         {
             logMessage(vehicles[randOffset].getName());
-            logMessage(" with registration: ");
+            logMessage(" with registration ");
             logMessage(vehicles[randOffset].getRego());
             logMessage(" has departed off end of road at time: ");
             logMessage(minute);
             logMessage(" after ");
-            logMessage(ttime);
+            logMessage(ttime+it->getParkedTime());
             logMessage(" minutes on the road.\n\n");
             vehicles.erase(it);
         }
@@ -148,10 +147,14 @@ void ActivityEngine::handleParking()
         vehicles[offset].incTimeParked();
         if(rand()%20 < 2)
         {
-            logMessage("Vehicle ");
+            logMessage(vehicles[offset].getName());
+            logMessage(" ");
             logMessage(vehicles[offset].getRego());
-            logMessage(" is no longer parked.\n");
+            logMessage(" is no longer parked. ");
             vehicles[offset].setParked(false);
+            logMessage("They were parked for ");
+            logMessage(vehicles[offset].getParkedTime());
+            logMessage(" minutes total.\n");
             parkedVehicles.erase(it);
         }
     }
