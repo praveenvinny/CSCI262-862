@@ -179,10 +179,10 @@ void printStatsInfo(vector<Stats> stats) {
 void printVehicleInfo(vector<Vehicle> vehicles) {
     cout << endl << "- - - - - - - printVehicleInfo - - - - - - -" << endl << endl;
 
-    cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
+    cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed\n";
 
     for (vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
-        cout <<  *iter;
+        cout <<  *iter << std::endl;;
     }
 }
 

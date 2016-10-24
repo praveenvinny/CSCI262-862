@@ -8,16 +8,17 @@
 
 void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si)
 {
-
-    std::cout << "\nBeginning simulation of day " << dayCount + 1 << "..." << std::endl;
+    ofile << "\nBeginning simulation of day " << dayCount + 1 << "..." << std::endl;
+    ofile << "Road is " << si.lengthOfRoad << " kilometres long..." << std::endl;
     dayCount++;
-    std::cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed"<<std::endl;
+
     for(int minute = 0; minute < DAY_LENGTH_IN_MINUTES; minute++)
     {
-        generateVehicle(rand()%si.noOfVehicleType, stats, vehicles, minute);
+        if(minute < DAY_LENGTH_IN_MINUTES-180)
+            generateVehicle(rand()%si.noOfVehicleType, stats, vehicles, minute);
+        handleDepartures(minute, si);
     }
 
-    writeLogFile();
 }
 
 static int varySpeed(int mean, int stdDev)
@@ -43,7 +44,7 @@ int findOffset(std::vector<Stats> stats, std::string vehicleType)
 void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::vector<Vehicle> vehicles, int time)
 {
     // this method has a chance of generating vehicle in accordance with the statistics in stats vector
-    int probability = rand() % 1000; // get a number between 1 and 1399 for each minute in the day
+    int probability = rand() % 1401; // get a number between 1 and 1399 for each minute in the day
     if(probability <= stats[offset].getNumMean())
     {
         Vehicle vehicle;
@@ -56,40 +57,61 @@ void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::
         vehicle.setBeginningTime(time);
         vehicle.generateRego();
         this->vehicles.push_back(vehicle);
+        logMessage("Vehicle arrived on road:\n");
+        logMessage("Name\tParking Flag\tRego\t\tVw\t\tSw\t\tSpeed\n");
+        logMessage(vehicle);
+        logMessage("\n");
+        logMessage(vehicle.getRego());
+        logMessage(" arrived at time: ");
+        logMessage(time);
+        logMessage("\n\n");
         #ifdef DEBUG
-        std::cout << vehicle;
+        std::cout << vehicle << std::endl;
         #endif
     }
 }
 
-void ActivityEngine::handleDepartures(int time)
+float computeTravelTime(Vehicle &vehicle, StatsInfo si)
 {
-     for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
-     {
-        // Check to see if they pull out on a side road
-     }
+    return si.lengthOfRoad / vehicle.getSpeed() * 60;
 }
 
-void ActivityEngine::writeLogFile(std::string outputFileName)
+void ActivityEngine::handleDepartures(int minute, StatsInfo si)
 {
-    std::ofstream ofile (outputFileName.c_str());
-
-    if (!ofile.is_open())
+    int randOffset = 0;
+    float ttime;
+    for(unsigned int i =0; i < vehicles.size(); i++)
     {
-        std::cout << "Cannot write to file " << outputFileName << ", Please check" <<std::endl;
-        exit(-1);
+        randOffset = rand() % vehicles.size();
+        if(rand()%120 < 5)
+        {
+            logMessage(vehicles[randOffset].getName());
+            logMessage(" with registration: ");
+            logMessage(vehicles[randOffset].getRego());
+            logMessage(" has departed off side road.\n\n");
+            vehicles.erase(vehicles.begin()+randOffset);
+        }
     }
-
-    ofile << "- - - - - - - Activity Log - - - - - - -" << std::endl;
-
-    ofile<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed"<<std::endl;
-
-    for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
+    for(std::vector<Vehicle>::iterator it = vehicles.begin(); it < vehicles.end(); ++it)
     {
-        ofile << (*iter);
+        ttime = computeTravelTime(*it, si);
+        if(minute >= (ttime + it->getBegTime()))
+        {
+            logMessage(vehicles[randOffset].getName());
+            logMessage(" with registration: ");
+            logMessage(vehicles[randOffset].getRego());
+            logMessage(" has departed off end of road at time: ");
+            logMessage(minute);
+            logMessage(" after ");
+            logMessage(ttime);
+            logMessage(" minutes on the road.\n\n");
+            vehicles.erase(it);
+        }
     }
+}
 
-    ofile.close();
-
-    std::cout << "All data has been writen to " << outputFileName << "." <<std::endl;
+template <class T>
+void ActivityEngine::logMessage(T message)
+{
+    ofile << message;
 }
