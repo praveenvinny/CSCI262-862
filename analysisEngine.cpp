@@ -5,7 +5,7 @@
  * Created on 24 October 2016, 2:11 PM
  */
 #include <cmath>
-#include <analysisEngine.h>
+#include "analysisEngine.h"
 
 using namespace std;
 
@@ -26,5 +26,21 @@ double AnalysisEngine::calculateSpeedSD(vector<float> array, double mean) {
     }
     value = sqrt(value/array.size());
     return value;
+}
+
+double AnalysisEngine::getMean() {
+    return this->speedMean;
+}
+
+double AnalysisEngine::getSD() {
+    return this->speedSD;
+}
+
+void AnalysisEngine::setMean(vector<float> array) {
+    this->speedMean = calculateSpeedMean(array);
+}
+
+void AnalysisEngine::setSD(vector<float> array, double mean) {
+    this->speedSD = calculateSpeedSD(array, mean);
 }
 

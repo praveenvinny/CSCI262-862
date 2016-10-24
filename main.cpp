@@ -8,6 +8,7 @@
 #include <sstream>
 #include "structures.h"
 #include "event.h"
+#include "analysisEngine.h"
 using namespace std;
 #define MAXNO 90
 
@@ -17,6 +18,8 @@ void readStatsData(string statsFileName, vector<Stats> &stats, StatsInfo &statsI
 
 void printVehicleInfo(vector<Vehicle> vehicles);
 void printStatsInfo(vector<Stats> stats);
+
+void analysisEngine(int);
 
 int main(int argc, char *argv[]) {
     if(argc != 4)
@@ -190,11 +193,13 @@ void printVehicleInfo(vector<Vehicle> vehicles) {
 
 void analysisEngine(int days) {
     for(int i=1; i<=days; i++) {
+        cout<<"Day "<<i<<":"<<endl;
     std::string outputFileName = "ActivityLog_";
     std::stringstream fileDay;
-    fileDay<<days<<"*.txt";
+    fileDay<<days<<".txt";
     outputFileName = outputFileName + fileDay.str();
-    ifstream readFromFile(outputFileName.c_str());
+    AnalysisEngine obj;
+    //ifstream readFromFile(outputFileName.c_str());
     //Reading day wise input from the file.
     }
 }

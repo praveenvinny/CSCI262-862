@@ -5,18 +5,24 @@
  * Created on 24 October 2016, 2:11 PM
  */
 
+#include <vector>
+
 #ifndef ANALYSISENGINE_H
 #define	ANALYSISENGINE_H
 
-#include <vector>
+using namespace std;
 
 class AnalysisEngine {
 private:
     double speedMean;
     double speedSD;
 public:
-    double calculateSpeedMean(vector<float> array, double mean);
-    double calculateSpeedSD(vector<float> array, double mean);
+    double calculateSpeedMean(vector<float> arr);
+    double calculateSpeedSD(vector<float>, double mean);
+    void setMean(vector<float>);
+    void setSD(vector<float>, double mean);
+    double getMean();
+    double getSD();
 };
 
 

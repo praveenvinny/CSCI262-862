@@ -2,11 +2,36 @@
 #define STRUCUTRES_H
 #include <string>
 #include <iostream>
+#include <vector>
+#include <algorithm>
+
+static void replaceStr(std::string &input, char value)
+{
+    char startVal;
+    int offset;
+    if(value == 'L')
+    {
+        startVal = 'A';
+        offset = 26;
+    }
+    else
+    {
+        startVal = '0';
+        offset = 9;
+    }
+    char replace;
+    for(unsigned int i = 0; i < input.size(); i++)
+    {
+        replace = startVal + rand() % offset;
+        if(input[i] == value)
+            input[i] = replace;
+    }
+}
 
 class Vehicle
 {
     public:
-        Vehicle() : vehicleName(""), parkingFlag(0), registrationFormat(""), volumeWeight(0), speed(0) {}
+        Vehicle() : vehicleName(""), parkingFlag(0), registration(""), volumeWeight(0), speedWeight(0) {}
         friend std::ostream &operator <<(std::ostream &out, Vehicle v)
         {
             out << v.vehicleName;
@@ -14,32 +39,47 @@ class Vehicle
                 out<< "\t\t";
             else
                 out<<"\t";
-            if( v.parkingFlag == true)
+            if( v.parkingFlag == 1)
                 out<<"True"<< "\t\t";
             else
                 out<<"False"<<"\t\t";
-            out << v.registrationFormat << "\t\t";
+            out << v.registration << "\t\t";
             out << v.volumeWeight << "\t\t";
-            out << v.speed << "\n";
+            out << v.speedWeight << "\t\t";
+            out << v.speed << std::endl;
             return out;
         }
-        void setName(std::string name)  { vehicleName = name; }
-        void setFlag(char flag)          { parkingFlag = flag; }
-        void setRego(std::string rego)  { registrationFormat = rego; }
-        void setWeight(int weight)      { volumeWeight = weight; }
-        void setSpeed(int speed)        { this->speed = speed; }
+        void setName(std::string name)   { vehicleName = name; }
+        void setFlag(int flag)          { parkingFlag = flag; }
+        void setRego(std::string rego)   { registration = rego; }
+        void setVolumeWeight(float weight) { volumeWeight = weight; }
+        void setSpeedWeight(float speed)   { speedWeight = speed; }
+        void setSpeed(float speed)         { this->speed = speed; }
+        void setBeginningTime(float time)  { beginningTime = time; }
+        void setParked(bool val)         { isParked = val; }
+        void generateRego()
+        {
+            replaceStr(registration, 'L');
+            replaceStr(registration, 'D');
+        }
 
-        std::string getName()       { return vehicleName; }
-        char getParkingFlag(){ return parkingFlag; }
-        std::string getRego()       { return registrationFormat; }
-        int getWeight()     { return volumeWeight; }
-        int getSpeed()      { return speed; }
+        std::string getName() { return vehicleName; }
+        int getParkingFlag() { return parkingFlag; }
+        std::string getRego() { return registration; }
+        float getVolumeWeight() { return volumeWeight; }
+        float getSpeedWeight()  { return speedWeight; }
+        float getSpeed()        { return speed; }
+        float getBegTime()      { return beginningTime; }
+        bool isVehicleParked()       { return isParked; }
     private:
         std::string vehicleName;
-        char parkingFlag;
-        std::string registrationFormat;
+        int parkingFlag;
+        std::string registration;
         float volumeWeight;
+        float speedWeight;
         float speed;
+        float beginningTime;
+        bool isParked;
 };
 
 class Stats
