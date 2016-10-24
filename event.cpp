@@ -80,11 +80,13 @@ void ActivityEngine::writeLogFile(std::string outputFileName)
         exit(-1);
     }
 
-    ofile << std::endl << "- - - - - - - Activity Log - - - - - - -" << std::endl << std::endl;
+    ofile << "- - - - - - - Activity Log - - - - - - -" << std::endl;
+
+    ofile<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed"<<std::endl;
 
     for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
     {
-        ofile << (*iter) << std::endl;
+        ofile << (*iter);
     }
 
     ofile.close();
