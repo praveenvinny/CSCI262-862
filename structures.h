@@ -45,7 +45,7 @@ class Vehicle
                 out<<"False"<<"\t\t";
             out << v.registration << "\t\t";
             out << v.volumeWeight << "\t\t";
-            out << v.speedWeight << "\t\t
+            out << v.speedWeight << "\t\t;
             out << v.speed << std::endl;
             return out;
         }
