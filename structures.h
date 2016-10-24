@@ -31,7 +31,7 @@ static void replaceStr(std::string &input, char value)
 class Vehicle
 {
     public:
-        Vehicle() : vehicleName(""), parkingFlag(0), registration(""), volumeWeight(0), speedWeight(0), speed(0), isParked(false), timeParked(0) {}
+        Vehicle() : vehicleName(""), parkingFlag(0), registration(""), volumeWeight(0), speedWeight(0) {}
         friend std::ostream &operator <<(std::ostream &out, Vehicle v)
         {
             out << v.vehicleName;
@@ -46,18 +46,17 @@ class Vehicle
             out << v.registration << "\t\t";
             out << v.volumeWeight << "\t\t";
             out << v.speedWeight << "\t\t";
-            out << v.speed;
+            out << v.speed << std::endl;
             return out;
         }
-        void setName(std::string name)     { vehicleName = name; }
-        void setFlag(int flag)             { parkingFlag = flag; }
-        void setRego(std::string rego)     { registration = rego; }
+        void setName(std::string name)   { vehicleName = name; }
+        void setFlag(int flag)          { parkingFlag = flag; }
+        void setRego(std::string rego)   { registration = rego; }
         void setVolumeWeight(float weight) { volumeWeight = weight; }
         void setSpeedWeight(float speed)   { speedWeight = speed; }
         void setSpeed(float speed)         { this->speed = speed; }
         void setBeginningTime(float time)  { beginningTime = time; }
-        void setParked(bool val)           { isParked = val; }
-        void incTimeParked()               { timeParked++; }
+        void setParked(bool val)         { isParked = val; }
         void generateRego()
         {
             replaceStr(registration, 'L');
@@ -72,7 +71,6 @@ class Vehicle
         float getSpeed()        { return speed; }
         float getBegTime()      { return beginningTime; }
         bool isVehicleParked()       { return isParked; }
-        int getParkedTime()     { return timeParked; }
     private:
         std::string vehicleName;
         int parkingFlag;
@@ -80,10 +78,8 @@ class Vehicle
         float volumeWeight;
         float speedWeight;
         float speed;
-        int beginningTime;
+        float beginningTime;
         bool isParked;
-        int timeParked;
-
 };
 
 class Stats
