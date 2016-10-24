@@ -1,14 +1,13 @@
 #include <iostream>
+#include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <string>
 #include <vector>
 #include <ctime>
 #include <cstring>
-#include <sstream>
 #include "structures.h"
 #include "event.h"
-#include "analysisEngine.h"
 using namespace std;
 #define MAXNO 90
 
@@ -19,19 +18,18 @@ void readStatsData(string statsFileName, vector<Stats> &stats, StatsInfo &statsI
 void printVehicleInfo(vector<Vehicle> vehicles);
 void printStatsInfo(vector<Stats> stats);
 
-void analysisEngine(int);
-
 int main(int argc, char *argv[]) {
-    if (argc != 4) {
-        cerr << "Usage: " << argv[0] << " Vehicles.txt Stats.txt NumOfDays" << endl;
-        exit(-1);
+    if(argc != 4)
+    {
+        cerr << "Usage: "<< argv[0] << " Vehicles.txt Stats.txt NumOfDays" << endl;
+            exit(-1);
     }
 
     srand(time(NULL));
 
     vector<Vehicle> vehicles;
     vector<Stats> stats;
-    ActivityEngine activityEngine;
+
 
     StatsInfo statsInfo;
     int noOfVehicleType;
@@ -52,9 +50,14 @@ int main(int argc, char *argv[]) {
     // print info
     printVehicleInfo(vehicles);
     printStatsInfo(stats);
-
-    for (int i = 0; i < days; i++)
+    ActivityEngine activityEngine(statsInfo.noOfVehicleType);
+    AnalysisEngine *ae = new AnalysisEngine[days];
+    activityEngine.setUpCarList(stats, vehicles);
+    for(int i = 0; i < days; i++)
+    {
         activityEngine.simulateDay(stats, vehicles, statsInfo);
+        activityEngine.computeFinalStats(ae, days);
+    }
 
     cout << endl << "noOfVehicleType = " << statsInfo.noOfVehicleType << endl
             << "lengthOfRoad = " << statsInfo.lengthOfRoad << endl
@@ -62,8 +65,6 @@ int main(int argc, char *argv[]) {
             << "noOfParkingSpaces = " << statsInfo.noOfParkingSpaces << endl;
 
     cout << "numberOfVehicleType = " << noOfVehicleType << endl;
-
-    analysisEngine(days);
 
     return 0;
 }
@@ -173,7 +174,7 @@ void readStatsData(string statsFileName, std::vector<Stats> &stats, StatsInfo &s
 void printStatsInfo(vector<Stats> stats) {
     cout << endl << "- - - - - - - printStatsInfo - - - - - - -" << endl << endl;
 
-    cout << "Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD" << endl;
+    cout<<"Vehicle Name\tMean Number\tStandard Deviation\tMean Speed\tSpeed SD"<<endl;
 
     for (vector<Stats>::iterator iter = stats.begin(); iter < stats.end(); ++iter) {
         cout << *iter;
@@ -183,27 +184,9 @@ void printStatsInfo(vector<Stats> stats) {
 void printVehicleInfo(vector<Vehicle> vehicles) {
     cout << endl << "- - - - - - - printVehicleInfo - - - - - - -" << endl << endl;
 
-    cout << "Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\n";
+    cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed\n";
 
     for (vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
-        cout << *iter;
+        cout <<  *iter << std::endl;;
     }
-}
-
-void analysisEngine(int days) {
-    for (int i = 1; i <= days; i++) {
-        cout << "Day " << i << ":" << endl;
-        std::string outputFileName = "ActivityLog_";
-        std::stringstream fileDay;
-        fileDay << days << ".txt";
-        outputFileName = outputFileName + fileDay.str();
-        AnalysisEngine obj;
-        cout<<outputFileName<<endl;
-        //ifstream readFromFile(outputFileName.c_str());
-        //Reading day wise input from the file.
-    }
-}
-
-void alertEngine() {
-
 }

@@ -1,92 +1,207 @@
+/*
+ * File: event.cpp
+ * Author: Jarod
+ */
+
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
-#include <string>
-#include <sstream>
 #include "structures.h"
+#include "analysisEngine.h"
 #include "event.h"
-
 #define DAY_LENGTH_IN_MINUTES 1440
 
-void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si) {
-
-    std::cout << "\nBeginning simulation of day " << dayCount + 1 << "..." << std::endl;
+void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si)
+{
+    ofile << "\nBeginning simulation of day " << dayCount + 1 << "..." << std::endl;
+    ofile << "Road is " << si.lengthOfRoad << " kilometres long..." << std::endl;
     dayCount++;
-    std::cout << "Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed" << std::endl;
-    for (int minute = 0; minute < DAY_LENGTH_IN_MINUTES; minute++) {
-        generateVehicle(rand() % si.noOfVehicleType, stats, vehicles, minute);
-    }
 
-    writeLogFile("ActivityLog", dayCount);
+    for(int minute = 0; minute < DAY_LENGTH_IN_MINUTES; minute++)
+    {
+        if(minute < DAY_LENGTH_IN_MINUTES-60) // we don't want cars on the road after we stop recording
+            generateVehicle(rand()%si.noOfVehicleType, stats, vehicles, minute);
+        handleDepartures(minute, si);
+        handleParking(si);
+    }
+    this->vehicles.clear();
 }
 
-static int varySpeed(int mean, int stdDev) {
-    int val = rand() % 2 + 1;
-    int retval = rand() % (mean + val * stdDev);
+static int varySpeed(int mean, int stdDev)
+{
+    int val = rand()% 2 + 1;
+    int retval = rand() % 10 + (mean+val*stdDev);
     return retval;
 }
 
-// Return the offset in the vector of the Stats object of type vehicleType
+void ActivityEngine::computeFinalStats(AnalysisEngine *ae, int aeSize)
+{
+    for(int i = 0; i < aeSize; i++)
+    {
+        for(int j = 0; j < size; j++)
+        {
+            ae[i].calculateSpeedMean(speed[j]);
+        }
+    }
+    // add in code for calculate number of vehicle mean
+}
 
-int findOffset(std::vector<Stats> stats, std::string vehicleType) {
-    int i = 0;
-    for (std::vector<Stats>::iterator iter = stats.begin(); iter < stats.end(); ++iter) {
-        if (iter->getType() == vehicleType)
-            return i;
-        i++;
+
+// Return the offset in the vector of vehicles with registration number
+static int findOffset(std::vector<Vehicle> vehicles, std::string rego)
+{
+    for(std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter)
+    {
+        if(iter->getRego() == rego)
+            return std::distance(vehicles.begin(), iter);
     }
     return -1;
 }
 
-void ActivityEngine::generateVehicle(int offset, std::vector<Stats> stats, std::vector<Vehicle> vehicles, int time) {
+void ActivityEngine::generateVehicle(int offset, std::vector<Stats> baseStats, std::vector<Vehicle> vehicles, int time)
+{
+    int probability = 0;
     // this method has a chance of generating vehicle in accordance with the statistics in stats vector
-    int probability = rand() % 1000; // get a number between 1 and 1399 for each minute in the day
-    if (probability <= stats[offset].getNumMean()) {
+    if(carList[vehicles[offset].getName()] - baseStats[offset].getNumMean() >= 20)
+        probability = 30;
+    else if(carList[vehicles[offset].getName()] - baseStats[offset].getNumMean() >= 10)
+        probability = 35;
+    else if(carList[vehicles[offset].getName()] - baseStats[offset].getNumMean() >= 5)
+        probability = 40;
+    else if(carList[vehicles[offset].getName()] - baseStats[offset].getNumMean() >= 0)
+        probability = 100;
+    else
+        probability = 150;
+    int rval = rand() % probability;
+    if(rval <= 2)
+    {
         Vehicle vehicle;
+        carList[vehicles[offset].getName()] += 1;
         vehicle.setName(vehicles[offset].getName());
         vehicle.setFlag(vehicles[offset].getParkingFlag());
         vehicle.setRego(vehicles[offset].getRego());
         vehicle.setVolumeWeight(vehicles[offset].getVolumeWeight());
         vehicle.setSpeedWeight(vehicles[offset].getSpeedWeight());
-        vehicle.setSpeed(varySpeed(stats[offset].getSpeedMean(), stats[offset].getSpeedStdDev()));
+        vehicle.setSpeed(varySpeed(baseStats[offset].getSpeedMean(), baseStats[offset].getSpeedStdDev()));
         vehicle.setBeginningTime(time);
         vehicle.generateRego();
         this->vehicles.push_back(vehicle);
-#ifdef DEBUG
-        std::cout << vehicle;
-#endif
+        speed[offset].push_back(vehicle.getSpeed());
+        //numberOfVehicles[offset] += 1;
+        logMessage("Vehicle arrived on road:\n");
+        //logMessage("Name\tParking Flag\tRego\t\tVw\t\tSw\t\tSpeed\n");
+        ofile << vehicle.getName() << " " << vehicle.getRego() << " Speed: "<< vehicle.getSpeed();
+        logMessage("\n");
+        logMessage(vehicle.getRego());
+        logMessage(" arrived at time: ");
+        logMessage(time);
+        logMessage("\n\n");
+        #ifdef DEBUG
+        std::cout << vehicle << std::endl;
+        #endif
     }
 }
 
-void ActivityEngine::handleDepartures(int time) {
-    for (std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
-        // Check to see if they pull out on a side road
+float computeTravelTime(Vehicle &vehicle, StatsInfo si)
+{
+    return si.lengthOfRoad / vehicle.getSpeed() * 60;
+}
+
+void ActivityEngine::handleDepartures(int minute, StatsInfo si)
+{
+    int randOffset = 0;
+    float ttime;
+    for(unsigned int i =0; i < vehicles.size(); i++)
+    {
+        randOffset = rand() % vehicles.size();
+        if(rand()%120 < 5 && vehicles[i].isVehicleParked() == false)
+        {
+            logMessage(vehicles[randOffset].getName());
+            logMessage(" with registration ");
+            logMessage(vehicles[randOffset].getRego());
+            logMessage(" has departed off side road at time: ");
+            logMessage(minute);
+            logMessage(" after ");
+            logMessage(minute-vehicles[randOffset].getBegTime());
+            logMessage(" minutes on the road.\n\n");
+
+            vehicles.erase(vehicles.begin()+randOffset);
+        }
+    }
+    for(std::vector<Vehicle>::iterator it = vehicles.begin(); it < vehicles.end(); ++it)
+    {
+        ttime = computeTravelTime(*it, si);
+        if((minute >= (ttime + it->getBegTime() + it->getParkedTime())) && it->isVehicleParked() == false)
+        {
+            logMessage(it->getName());
+            logMessage(" with registration ");
+            logMessage(it->getRego());
+            logMessage(" has departed off end of road at time: ");
+            logMessage(minute);
+            logMessage(" after ");
+            logMessage(ttime+it->getParkedTime());
+            logMessage(" minutes on the road.\n\n");
+            vehicles.erase(it);
+        }
     }
 }
 
-void ActivityEngine::writeLogFile(std::string outputFile, int day) {
-    std::string outputFileName = outputFile + "_";
-    std::stringstream fileDay;
-    fileDay << day;
-    outputFileName = outputFileName + fileDay.str() + ".txt";
-    std::ofstream ofile(outputFileName.c_str());
-
-    if (!ofile.is_open()) {
-        std::cout << "Cannot write to file " << outputFileName << ", Please check" << std::endl;
-        exit(-1);
-    }
-
-    ofile << "- - - - - - - Activity Log - - - - - - -" << std::endl;
-
-    ofile << "Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed" << std::endl;
-
-    for (std::vector<Vehicle>::iterator iter = vehicles.begin(); iter < vehicles.end(); ++iter) {
-        ofile << (*iter);
-    }
-
-    ofile.close();
-
-    std::cout << "All data has been writen to " << outputFileName << "." << std::endl;
+template <class T>
+void ActivityEngine::logMessage(T message)
+{
+    ofile << message;
 }
 
+void ActivityEngine::handleParking(StatsInfo statsInfo)
+{
+    static int numParked = 0;
+    static std::vector<std::string> parkedVehicles; // store the rego of parked vehicles
+    for(std::vector<Vehicle>::iterator it = vehicles.begin(); it < vehicles.end(); ++it)
+    {
+        if(it->getParkingFlag() == 1 && numParked <= statsInfo.noOfParkingSpaces)
+        {
+            if(it->isVehicleParked() == false)
+            {
+                if(rand()%40 < 2)
+                {
+                    logMessage("Vehicle ");
+                    logMessage(it->getRego());
+                    logMessage(" has parked.\n");
+                    it->setParked(true);
+                    numParked++;
+                    parkedVehicles.push_back(it->getRego());
+                }
 
+            }
+        }
+    }
+    for(std::vector<std::string>::iterator it = parkedVehicles.begin(); it < parkedVehicles.end(); ++it)
+    {
+        int offset = findOffset(vehicles, *it);
+        if(offset == -1) break;
+        if((unsigned int) offset >= vehicles.size())
+            offset = findOffset(vehicles, *it);
+        vehicles[offset].incTimeParked();
+        if(rand()%20 < 3)
+        {
+            numParked--;
+            logMessage(vehicles[offset].getName());
+            logMessage(" ");
+            logMessage(vehicles[offset].getRego());
+            logMessage(" is no longer parked. ");
+            vehicles[offset].setParked(false);
+            logMessage("They have been parked for ");
+            logMessage(vehicles[offset].getParkedTime());
+            logMessage(" minutes total.\n");
+            parkedVehicles.erase(it);
+        }
+    }
+}
+
+void ActivityEngine::setUpCarList(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles)
+{
+    for(unsigned int i = 0; i < stats.size(); i++)
+    {
+        carList[vehicles[i].getName()] = stats[i].getNumMean();
+    }
+}

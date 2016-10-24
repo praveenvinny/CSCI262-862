@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   analysisEngine.h
  * Author: Praveen
  *
@@ -8,7 +8,7 @@
 #include <vector>
 
 #ifndef ANALYSISENGINE_H
-#define	ANALYSISENGINE_H
+#define ANALYSISENGINE_H
 
 using namespace std;
 
@@ -19,6 +19,7 @@ private:
 public:
     double calculateSpeedMean(vector<float> arr);
     double calculateSpeedSD(vector<float>, double mean);
+    // Add in functions for computing mean and std dev of number of cars
     void setMean(vector<float>);
     void setSD(vector<float>, double mean);
     double getMean();
@@ -26,5 +27,5 @@ public:
 };
 
 
-#endif	/* ANALYSISENGINE_H */
+#endif  /* ANALYSISENGINE_H */
 
