@@ -9,9 +9,9 @@
 void ActivityEngine::simulateDay(std::vector<Stats> &stats, std::vector<Vehicle> &vehicles, StatsInfo si)
 {
 
-    std::cout << "Beginning simulation of day " << dayCount << "..." << std::endl;
+    std::cout << "\nBeginning simulation of day " << dayCount << "..." << std::endl;
     dayCount++;
-    std::cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed\n"<<std::endl;
+    std::cout<<"Vehicle Name\tParking Flag\tReg. Format\tVol Weight\tSpeed Weight\tSpeed"<<std::endl;
     for(int minute = 0; minute < DAY_LENGTH_IN_MINUTES; minute++)
     {
         generateVehicle(rand()%si.noOfVehicleType, stats, vehicles, minute);
