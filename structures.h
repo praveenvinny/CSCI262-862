@@ -45,7 +45,8 @@ class Vehicle
                 out<<"False"<<"\t\t";
             out << v.registration << "\t\t";
             out << v.volumeWeight << "\t\t";
-            out << v.speedWeight << "\n";
+            out << v.speedWeight << "\t\t
+            out << v.speed << std::endl;
             return out;
         }
         void setName(std::string name)   { vehicleName = name; }
